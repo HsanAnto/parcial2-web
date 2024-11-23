@@ -49,4 +49,36 @@ export class PacienteMedicoService {
     paciente.medicos.push(medico);
     await this.pacienteRepository.save(paciente);
   }
+
+  async removeMedicoFromPaciente(
+    pacienteId: string,
+    medicoId: string,
+  ): Promise<void> {
+    // Verificar si el paciente existe
+    const paciente = await this.pacienteRepository.findOne({
+      where: { id: pacienteId },
+      relations: ['medicos'],
+    });
+    if (!paciente) {
+      throw new NotFoundException(`El paciente con id ${pacienteId} no existe`);
+    }
+    // Verificar si el médico existe
+    const medico = await this.medicoRepository.findOne({
+      where: { id: medicoId },
+      relations: ['pacientes'],
+    });
+    if (!medico) {
+      throw new NotFoundException(`El médico con id ${medicoId} no existe`);
+    }
+    // Verificar si el médico está asociado al paciente
+    const medicoIndex = paciente.medicos.findIndex((m) => m.id === medicoId);
+    if (medicoIndex === -1) {
+      throw new BadRequestException(
+        `El médico con id ${medicoId} no está asociado al paciente con id ${pacienteId}`,
+      );
+    }
+    // Desvincular al médico del paciente
+    paciente.medicos.splice(medicoIndex, 1);
+    await this.pacienteRepository.save(paciente);
+  }
 }
