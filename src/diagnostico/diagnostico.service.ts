@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Diagnostico } from './diagnostico.entity/diagnostico.entity';
+import { Diagnostico } from './diagnostico.entity';
 
 @Injectable()
 export class DiagnosticoService {

@@ -5,7 +5,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Paciente } from '../../paciente/paciente.entity/paciente.entity';
+import { Paciente } from '../paciente/paciente.entity';
 
 @Entity()
 export class Medico {

@@ -5,8 +5,8 @@ import {
   ManyToMany,
   OneToMany,
 } from 'typeorm';
-import { Medico } from '../../medico/medico.entity/medico.entity';
-import { Diagnostico } from '../../diagnostico/diagnostico.entity/diagnostico.entity';
+import { Medico } from '../medico/medico.entity';
+import { Diagnostico } from '../diagnostico/diagnostico.entity';
 
 @Entity()
 export class Paciente {

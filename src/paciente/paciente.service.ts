@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Paciente } from './paciente.entity/paciente.entity';
-import { Medico } from '../medico/medico.entity/medico.entity';
+import { Paciente } from './paciente.entity';
+import { Medico } from '../medico/medico.entity';
 
 @Injectable()
 export class PacienteService {
@@ -49,29 +49,5 @@ export class PacienteService {
       );
     }
     await this.pacienteRepository.delete(id);
-  }
-
-  async addMedicoToPaciente(
-    pacienteId: string,
-    medicoId: string,
-  ): Promise<void> {
-    const paciente = await this.findOne(pacienteId);
-    const medico = await this.medicoRepository.findOne({
-      where: { id: medicoId },
-      relations: ['pacientes'],
-    });
-
-    if (!medico) {
-      throw new NotFoundException(`El médico con id ${medicoId} no existe`);
-    }
-
-    if (paciente.medicos.length >= 5) {
-      throw new BadRequestException(
-        'Un paciente no puede tener más de 5 médicos asignados',
-      );
-    }
-
-    paciente.medicos.push(medico);
-    await this.pacienteRepository.save(paciente);
   }
 }
