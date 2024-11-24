@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "cf27aae2-b719-488e-a30b-f638037166b8",
+		"name": "Medico",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38629883"
+	},
+	"item": [
+		{
+			"name": "Crear un Médico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"pm.environment.set(\"idMedico\", response.id);\r",
+							"\r",
+							"pm.test(\"Médico creado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property(\"id\");\r",
+							"    pm.expect(response).to.have.property(\"nombre\");\r",
+							"    pm.expect(response).to.have.property(\"especialidad\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Dr. López\",\r\n  \"especialidad\": \"Cardiología\",\r\n  \"telefono\": \"555-1234\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/medicos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un Médico sin nombre",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"No se crea medico sin nombre\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(400);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.message).to.include(\"El nombre y la especialidad no pueden estar vacíos\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"\",\r\n  \"especialidad\": \"Cardiología\",\r\n  \"telefono\": \"555-1234\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/medicos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un Médico sin especialidad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"No se crea medico sin especialidad\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(400);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.message).to.include(\"El nombre y la especialidad no pueden estar vacíos\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Dr. López\",\r\n  \"especialidad\": \"\",\r\n  \"telefono\": \"555-1234\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/medicos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Todos los Médicos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Médicos obtenidos correctamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.be.an(\"array\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener un Médico por su ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Médico obtenido exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property(\"id\");\r",
+							"    pm.expect(response).to.have.property(\"nombre\");\r",
+							"    pm.expect(response).to.have.property(\"especialidad\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener un Médico que no existe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Médico no encontrado\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(404);\r",
+							"    pm.expect(response.message).to.include(\"El médico\");\r",
+							"    pm.expect(response.message).to.include(\"no existe\");\r",
+							"    pm.expect(response.error).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Médico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Médico eliminado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Médico que no existe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Eliminar médico no encontrado\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(404);\r",
+							"    pm.expect(response.message).to.include(\"El médico\");\r",
+							"    pm.expect(response.message).to.include(\"no existe\");\r",
+							"    pm.expect(response.error).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

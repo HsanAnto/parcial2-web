@@ -123,4 +123,33 @@ describe('PacienteService', () => {
       ),
     );
   });
+
+  it('Debe obtener todos los pacientes correctamente', async () => {
+    const pacientes = [
+      {
+        id: '1',
+        nombre: 'Juan Pérez',
+        genero: 'M',
+        diagnosticos: [{ id: '1', nombre: 'Diagnóstico 1' }],
+        medicos: [],
+      },
+      {
+        id: '2',
+        nombre: 'Ana Gómez',
+        genero: 'F',
+        diagnosticos: [],
+        medicos: [],
+      },
+    ];
+
+    jest
+      .spyOn(pacienteRepository, 'find')
+      .mockResolvedValue(pacientes as Paciente[]);
+
+    const result = await service.findAll();
+    expect(result).toEqual(pacientes);
+    expect(pacienteRepository.find).toHaveBeenCalledWith({
+      relations: ['diagnosticos'],
+    });
+  });
 });

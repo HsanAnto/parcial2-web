@@ -1,0 +1,476 @@
+{
+	"info": {
+		"_postman_id": "b67e7290-1777-491a-8e83-582e930cf176",
+		"name": "Paciente",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38629883"
+	},
+	"item": [
+		{
+			"name": "Crea un paciente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"idPaciente\", response.id);\r",
+							"\r",
+							"pm.test(\"Paciente creado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property(\"id\");\r",
+							"    pm.expect(response).to.have.property(\"nombre\");\r",
+							"    pm.expect(response).to.have.property(\"genero\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"genero\": \"M\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pacientes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crea un paciente con nombre menor a 3 caracteres",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"No se crea paciente con nombre menor a tres caracteres\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(400);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.message).to.include(\"El nombre debe tener al menos 3 caracteres\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Ju\",\r\n  \"genero\": \"M\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pacientes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Todos los Pacientes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Pacientes obtenidos correctamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.be.an(\"array\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener un Paciente por su ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Paciente obtenido exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property(\"id\");\r",
+							"    pm.expect(response).to.have.property(\"nombre\");\r",
+							"    pm.expect(response).to.have.property(\"genero\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener un Paciente que no existe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Paciente no encontrado\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(404);\r",
+							"    pm.expect(response.message).to.include(\"El paciente\");\r",
+							"    pm.expect(response.message).to.include(\"no existe\");\r",
+							"    pm.expect(response.error).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Paciente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Paciente eliminado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Paciente que no existe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Eliminar paciente no encontrado\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(404);\r",
+							"    pm.expect(response.message).to.include(\"El paciente\");\r",
+							"    pm.expect(response.message).to.include(\"no existe\");\r",
+							"    pm.expect(response.error).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crea un paciente con diagnostico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"idPaciente\", response.id);\r",
+							"\r",
+							"pm.test(\"Paciente creado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property(\"id\");\r",
+							"    pm.expect(response).to.have.property(\"nombre\");\r",
+							"    pm.expect(response).to.have.property(\"genero\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"genero\": \"M\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pacientes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crea un diagnóstico para paciente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"idDiagnostico\", response.id);\r",
+							"\r",
+							"pm.test(\"Diagnóstico creado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property(\"id\");\r",
+							"    pm.expect(response).to.have.property(\"nombre\");\r",
+							"    pm.expect(response).to.have.property(\"descripcion\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Nuevo diagnóstico\",\r\n  \"descripcion\": \"Nuevo diagnóstico\",\r\n  \"paciente\": {\r\n    \"id\": \"{{idPaciente}}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/diagnosticos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"diagnosticos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Paciente con diagnostico asociado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Paciente eliminado sin exito por tener un diagnostico\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(400);\r",
+							"    pm.expect(response.message).to.include(\"No se puede eliminar un paciente con diagnósticos asociados\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Elimina un diagnóstico por su ID Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Diagnóstico eliminado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/diagnosticos/{{idDiagnostico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"diagnosticos",
+						"{{idDiagnostico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Paciente Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Paciente eliminado exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(204);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

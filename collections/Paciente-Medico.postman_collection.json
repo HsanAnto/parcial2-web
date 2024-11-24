@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "ef9f4c74-90bb-440b-89a0-6e26fe4491be",
+		"name": "Paciente-Medico",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38629883"
+	},
+	"item": [
+		{
+			"name": "Crear un Médico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"pm.environment.set(\"idMedico\", response.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Dr. López\",\r\n  \"especialidad\": \"Cardiología\",\r\n  \"telefono\": \"555-1234\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/medicos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crea un paciente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"idPaciente\", response.id);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"genero\": \"M\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pacientes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agregar Paciente a un Médico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Paciente agregado al médico exitosamente\", () => {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}",
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agregar Paciente que no existe a un Médico",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Agregar paciente no encontrado\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(404);\r",
+							"    pm.expect(response.message).to.include(\"El paciente\");\r",
+							"    pm.expect(response.message).to.include(\"no existe\");\r",
+							"    pm.expect(response.error).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/00000000-0000-0000-0000-000000000000/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"00000000-0000-0000-0000-000000000000",
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agregar Paciente a un Médico que no existe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Agregar paciente a médico no encontrado\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(404);\r",
+							"    pm.expect(response.message).to.include(\"El médico\");\r",
+							"    pm.expect(response.message).to.include(\"no existe\");\r",
+							"    pm.expect(response.error).to.equal(\"Not Found\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}/medicos/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}",
+						"medicos",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Médico Con Paciente Asociado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"No eliminar medico con paciente asociados\", () => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(pm.response.code).to.equal(400);\r",
+							"    pm.expect(response.message).to.include(\"No se puede eliminar un médico con pacientes asociados\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar Paciente de un Médico",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}",
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Paciente",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pacientes/{{idPaciente}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pacientes",
+						"{{idPaciente}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar un Médico",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/medicos/{{idMedico}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"medicos",
+						"{{idMedico}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
